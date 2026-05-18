@@ -1,2 +1,2 @@
 # javascript-tasks
-This repository is a collection of tasks done using JavaScript. 
+This repository is a collection of tasks done using JavaScrip
