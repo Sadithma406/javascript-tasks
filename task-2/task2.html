@@ -1,7 +1,22 @@
 <html>
+<style>
+  #fileInput{
+    display:none
+    }
+   .fileUpload{
+    display:inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    background-color: #62666b;
+    color: white;
+    border-radius: 4px;
+    font-size: 14px;}
 
+</style>  
 <body>
-  <input type="file" id="fileInput"><br><br>
+  <label for="fileInput" class="fileUpload">Choose File</label>
+  <input type="file" id="fileInput">
+  <br><br>
   <div id="output"></div>
 </body>
 
