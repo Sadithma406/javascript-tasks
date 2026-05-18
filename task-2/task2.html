@@ -25,22 +25,32 @@
   const output = document.querySelector("#output");
 
   function printOutput(file) {
-    if (file) {
-      console.log("File Name: " + file.name);
-      output.textContent = "File uploaded: " + file.name;
+    if (file.length >0) {
+      txt = "";
+      for(f of file) {
+        console.log("File Name: " + f.name); 
+        txt += "File uploaded: " + f.name + "<br>";
+      }
+      output.innerHTML = txt;
+
     }
     else {
       return;
     }
   }
+  //button click
   file.addEventListener("change", (event) => {
-    const file = event.target.files[0];
+    const file = event.target.files;
     printOutput(file);
   })
+
+  //pasting the file
   window.addEventListener("paste", (event) => {
-    const file = event.clipboardData.files[0];
+    const file = event.clipboardData.files;
     printOutput(file);
   })
+
+  //drag and drop
   const draggings = ["dragenter", "dragover", "dragleave", "drop"];
   draggings.forEach(eventName => {
     document.body.addEventListener(eventName, (event) => {
@@ -49,7 +59,7 @@
     })
   })
   document.body.addEventListener("drop", (event) => {
-    const file = event.dataTransfer.files[0];
+    const file = event.dataTransfer.files;
     printOutput(file);
   })
 </script>
