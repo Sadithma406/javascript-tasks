@@ -1,0 +1,60 @@
+<html>
+<body>
+    <style>
+        #result{
+            width:75px;
+            height:25px;
+            display:inline-block;
+            border: 1px solid #000;
+            box-sizing: border-box;
+            vertical-align:middle;
+        
+        }
+   
+    </style>    
+
+    <script>
+        function blendColors(){
+            const color1 = document.querySelector("#color1").value;
+            const color2 = document.querySelector("#color2").value;
+            const ratio = document.querySelector("#mixingRatio").value;  
+
+            const r1 = toRGB(color1).r;
+            const g1 = toRGB(color1).g;
+            const b1 = toRGB(color1).b;
+
+            const r2 = toRGB(color2).r;
+            const g2 = toRGB(color2).g;
+            const b2 = toRGB(color2).b;
+            const r = Math.round(r1 * (1 - ratio) + r2 * ratio);
+            const g = Math.round(g1 * (1 - ratio) + g2 * ratio);
+            const b = Math.round(b1 * (1 - ratio) + b2 * ratio);
+
+            const newColor ="#"+r.toString(16).padStart(2,'0')+g.toString(16).padStart(2,'0')+b.toString(16).padStart(2,'0');
+            document.querySelector("#result").style.backgroundColor = newColor;
+        }
+        const toRGB = (color) => {
+            const r = parseInt(color.substring(1,3),16);
+            const g = parseInt(color.substring(3,5),16);
+            const b = parseInt(color.substring(5,7),16);
+            return {r,g,b};
+        }
+
+    </script>    
+    <div>
+        <input type="color" id="color1" value="#ff0000"></input><span>+</span>
+        <input type="color" id="color2" value="#00ff00"></input><span>+</span>
+        <select id="mixingRatio">
+            <option value = "0">0%</option>
+            <option value ="0.25">25%</option>
+            <option value = "0.5">50%</option>
+            <option value = "0.75">75%</option>
+            <option value = "1">100%</option>
+        </select>  
+        <span>=</span>
+        <div id="result"></div>  
+        <br><br>
+        <button id="blend" value="Blend" onclick="blendColors()">Blend</button>
+    </div>
+</body>
+</html>
