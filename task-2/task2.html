@@ -1,0 +1,23 @@
+<html>
+
+<body>
+  <input type="file" id="fileInput">
+</body>
+
+<script>
+  const file= document.querySelector("#fileInput");
+  function printOutput(file){
+    if(file){
+      console.log(file)
+    }
+    else{
+      return;
+    }
+  }
+  file.addEventListener("change", (event)=>{
+    const file = event.target.files[0];
+    printOutput(file);
+  })
+</script>
+
+</html>
