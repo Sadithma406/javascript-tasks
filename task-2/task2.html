@@ -1,21 +1,40 @@
 <html>
 
 <body>
-  <input type="file" id="fileInput">
+  <input type="file" id="fileInput"><br><br>
+  <div id="output"></div>
 </body>
 
 <script>
-  const file= document.querySelector("#fileInput");
-  function printOutput(file){
-    if(file){
-      console.log(file)
+  const file = document.querySelector("#fileInput");
+  const output = document.querySelector("#output");
+
+  function printOutput(file) {
+    if (file) {
+      console.log("File Name: " + file.name);
+      output.textContent = "File uploaded: " + file.name;
     }
-    else{
+    else {
       return;
     }
   }
-  file.addEventListener("change", (event)=>{
+  file.addEventListener("change", (event) => {
     const file = event.target.files[0];
+    printOutput(file);
+  })
+  window.addEventListener("paste", (event) => {
+    const file = event.clipboardData.files[0];
+    printOutput(file);
+  })
+  const draggings = ["dragenter", "dragover", "dragleave", "drop"];
+  draggings.forEach(eventName => {
+    document.body.addEventListener(eventName, (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+    })
+  })
+  document.body.addEventListener("drop", (event) => {
+    const file = event.dataTransfer.files[0];
     printOutput(file);
   })
 </script>
