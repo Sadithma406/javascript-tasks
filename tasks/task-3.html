@@ -1,0 +1,76 @@
+<html>
+
+<head>
+  <title>Custom Context Menu</title>
+  <style>
+    .mainBox {
+      width:150px;
+      height: 150px;
+      border: 1px solid black;
+      align-items: center;
+      position:relative;
+      padding:10px;
+    }
+
+    .menu {
+      display: none;
+      position: absolute;
+      background-color: rgb(123, 120, 120);
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+    }
+
+    .menu ul {
+      list-style: none;
+      padding: 0px;
+      margin:0px;
+    }
+
+    .menu li {
+      cursor: pointer;
+       padding:4px 15px;
+    }
+
+    .menu li:hover {
+      background-color: #f0f0f0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="mainBox">
+    <p>Right click to open the custom context menu.</p>
+  </div>
+  <div class="menu">
+    <ul>
+      <li class="colors" value="#f94449">Red</li>
+      <li class="colors" value="#77DD77">Green</li>
+      <li class="colors" value="#00B4D8">Blue</li>
+    </ul>
+  </div>
+</body>
+
+<script>
+  const menu = document.querySelector(".menu");
+  const mainBox = document.querySelector(".mainBox");
+  const colors = document.querySelectorAll(".colors");
+  mainBox.addEventListener("contextmenu",(event)=>{
+    event.preventDefault();
+    menu.style.display ="block";
+    menu.style.left =event.offsetX+"px";
+    menu.style.top =event.offsetY+"px";
+  })
+  window.addEventListener("click",(event)=>{
+    menu.style.display = "none";
+  })
+  colors.forEach(color => {
+    color.addEventListener("click",(event) =>{
+      menu.style.display = "none";
+      mainBox.style.backgroundColor = color.getAttribute("value");
+    })
+  })
+</script>
+
+</html>
