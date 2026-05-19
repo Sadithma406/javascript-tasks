@@ -1,50 +1,78 @@
 <html>
-    <body>
-        <input type="file" id="fileInput">
-        <br><br>
-        <select id="size">
-            <option value="0.2">x0.2</option>
-            <option value="0.5">x0.5</option>
-            <option value="1.5">x1.5</option>
-            <option value="2">x2</option>   
-        </select>
-        <button id="download">Resize and Download</button>
-    </body>
 
-    <script>
-        const file=document.querySelector("#fileInput");
-        const size=document.querySelector("#size");
-        const button=document.querySelector("#download");
-        let img = null;
-        let originalName = null;
-        file.addEventListener("change",(event)=>{
-            const chosenFile = event.target.files[0];
-            if(chosenFile.type.startsWith("image/")){
-                img = new Image();
-                img.src = URL.createObjectURL(chosenFile);
-                originalName = chosenFile.name;
-            }
-            else{
-                alert("Please select an image file.");
-            }
-        });
-        button.addEventListener("click",()=>{
-            if(img){
-                const canvas = document.createElement("canvas");
-                const ctx = canvas.getContext("2d");
-                canvas.width = img.width * parseFloat(size.value);
-                canvas.height = img.height * parseFloat(size.value);
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                canvas.toBlob((blob) => {
-                    const link = document.createElement("a");
-                    link.href = URL.createObjectURL(blob);
-                    link.download = "resized-"+originalName;
-                    link.click();
-                });
-            }
-            else{
-                alert("Please select an image file.");
-            }
-        });
-    </script>
+<body>
+  <input type="file" id="fileInput">
+  <br><br>
+  <input type="number" id="imgWidth">
+  <input type="number" id="imgHeight">
+  <br><br>
+  <button id="download">Resize and Download</button>
+</body>
+
+<script>
+  const file = document.querySelector("#fileInput");
+  const widthInput = document.querySelector("#imgWidth");
+  const heightInput = document.querySelector("#imgHeight");
+  const button = document.querySelector("#download");
+  let img = null;
+  let originalName = null;
+  let ratio = 1;
+  file.addEventListener("change", (event) => {
+    const chosenFile = event.target.files[0];
+    if (!chosenFile) return;
+
+    if (chosenFile.type.startsWith("image/")) {
+      img = new Image();
+      img.src = URL.createObjectURL(chosenFile);
+      originalName = chosenFile.name;
+      img.onload = function () {
+        widthInput.value = img.naturalWidth;
+        heightInput.value = img.naturalHeight;
+
+        ratio = img.naturalWidth / img.naturalHeight;
+      };
+
+    }
+    else {
+      alert("Please select an image file.");
+    }
+  });
+
+  widthInput.addEventListener("input", () => {
+    if (!img) return;
+    const newWidth = parseFloat(widthInput.value);
+
+    if (newWidth) {
+      heightInput.value = Math.round(newWidth / ratio);
+    }
+  });
+
+  heightInput.addEventListener("input", () => {
+    if (!img) return;
+    const newHeight = parseFloat(heightInput.value);
+
+    if (newHeight) {
+      widthInput.value = Math.round(newHeight * ratio);
+    }
+  });
+  button.addEventListener("click", () => {
+    if (img) {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = parseInt(widthInput.value);
+      canvas.height = parseInt(heightInput.value);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob((blob) => {
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "resized-" + originalName;
+        link.click();
+      });
+    }
+    else {
+      alert("Please select an image file.");
+    }
+  });
+</script>
+
 </html>
