@@ -1,0 +1,162 @@
+<html>
+
+<head>
+  <style>
+    #container {
+      margin: auto;
+      width: 400px;
+      height: 450px;
+      border: 1px solid black;
+      background-color: rgb(192, 192, 192);
+    }
+
+    .cards {
+      width: 70px;
+      height: 80px;
+      background-color: rgb(88, 88, 88);
+      border: 1px solid black;
+      margin: 10px;
+      display: inline-block;
+      border-radius: 10px;
+      line-height: 80px;
+      text-align: center;
+      vertical-align: top;
+      font-size: 30px;
+      transition: transform 0.5s;
+    }
+
+    .cardCollection {
+      padding: 10px;
+    }
+
+    .topics {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px;
+      border: 1px solid blue;
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .topics div {
+      cursor: pointer;
+      padding:0px 10px;
+    }
+
+    .topics div:hover {
+      color: blue;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>Match the Cards</h2>
+  <div class="topics">
+    <div id="nature">Nature</div>
+    <div id="foodS">Foods</div>
+    <div id="animals">Animals</div>
+    <div id="dessert">Dessert</div>
+  </div>
+  <div id="container">
+    <div class="cardCollection">
+      <div id="card1" class="cards"></div>
+      <div id="card2" class="cards"></div>
+      <div id="card3" class="cards"></div>
+      <div id="card4" class="cards"></div>
+      <div id="card5" class="cards"></div>
+      <div id="card6" class="cards"></div>
+      <div id="card7" class="cards"></div>
+      <div id="card8" class="cards"></div>
+      <div id="card9" class="cards"></div>
+      <div id="card10" class="cards"></div>
+      <div id="card11" class="cards"></div>
+      <div id="card12" class="cards"></div>
+      <div id="card13" class="cards"></div>
+      <div id="card14" class="cards"></div>
+      <div id="card15" class="cards"></div>
+      <div id="card16" class="cards"></div>
+    </div>
+  </div>
+
+  <script>
+    const topics = document.querySelectorAll(".topics div");
+    const emojis = {
+      foods: ["🍔", "🥤", "🥗", "🍗", "🍟", "🥓", "🥞", "🍲"],
+      nature: ["☘️", "🏕️", "🌿", "🌲", "🌳", "🌾", "🌴", "🍃"],
+      animals: ["🐹", "🦊", "🦁", "🦓", "🐱", "🐶", "🐯", "🐼"],
+      dessert: ["🍧", "🍨", "🧁", "🍰", "🍫", "🍩", "🍦", "🍹"]
+    };
+    let selectedEmoji = [];
+    topics.forEach(topic => {
+      topic.addEventListener("click", () => {
+        topics.forEach(t => {
+          t.style.border = "none";
+          t.style.borderRadius = "none";
+        })
+        topic.style.border = "1px solid blue";
+        topic.style.borderRadius = "10px";
+        selectedEmoji = emojis[topic.innerText.toLowerCase()];
+        const allEmojis = [...selectedEmoji, ...selectedEmoji];
+        let cards = document.querySelectorAll(".cards");
+        let openCount = 0;
+        let open1 = null;
+        let open2 = null;
+        cards.forEach(card => {
+          card.style.transform = "rotateY(0deg)";
+          card.style.backgroundColor = "rgb(88, 88, 88)";
+          card.innerText = "";
+        });
+
+        const container = document.querySelector(".cardCollection");
+        container.innerHTML = container.innerHTML;
+        cards = document.querySelectorAll(".cards");
+
+        for (let i = 0; i < allEmojis.length; i++) {
+          const randomIndex = Math.floor(Math.random() * allEmojis.length);
+          [allEmojis[i], allEmojis[randomIndex]] = [allEmojis[randomIndex], allEmojis[i]];
+        }
+        cards.forEach((card, index) => {
+          card.innerText = "";
+          card.addEventListener("click", () => {
+            if (openCount < 2 && card.innerText=="") {
+              if (open1 == null) {
+                open1 = card;
+              }
+              else if (open2 == null && card != open1) {
+                open2 = card;
+              }
+              card.style.transform = "rotateY(180deg)";
+              card.innerText = allEmojis[index];
+              openCount++;
+              if (openCount == 2) {
+                if (open1.innerText == open2.innerText) {
+                  open1.style.backgroundColor = "yellow";
+                  open2.style.backgroundColor = "yellow";
+                  open1 = null;
+                  open2 = null;
+                  openCount = 0;
+                }
+                else {
+                  setTimeout(() => {
+                    open1.style.transform = "rotateY(0deg)";
+                    open2.style.transform = "rotateY(0deg)";
+                    open1.innerText = "";
+                    open2.innerText = "";
+                    open1 = null;
+                    open2 = null;
+                    openCount = 0;
+                  }, 500);
+                }
+              }
+            }
+          })
+        })
+
+      });
+    });
+
+  </script>
+</body>
+
+</html>
