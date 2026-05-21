@@ -90,10 +90,12 @@
     let selectedEmoji = [];
     topics.forEach(topic => {
       topic.addEventListener("click", () => {
+        //removing the current styles of the topics
         topics.forEach(t => {
           t.style.border = "none";
           t.style.borderRadius = "none";
         })
+        //adding the new styles for the topic
         topic.style.border = "1px solid blue";
         topic.style.borderRadius = "10px";
         selectedEmoji = emojis[topic.innerText.toLowerCase()];
@@ -102,21 +104,24 @@
         let openCount = 0;
         let open1 = null;
         let open2 = null;
+        //keep the original styles of the cards and remove the emojis
         cards.forEach(card => {
           card.style.transform = "rotateY(0deg)";
           card.style.backgroundColor = "rgb(88, 88, 88)";
           card.innerText = "";
         });
-
+        //Restructuring the cards to remove the previous event listeners
         const container = document.querySelector(".cardCollection");
         container.innerHTML = container.innerHTML;
         cards = document.querySelectorAll(".cards");
 
+        //shuffling the emojis 
         for (let i = 0; i < allEmojis.length; i++) {
           const randomIndex = Math.floor(Math.random() * allEmojis.length);
           [allEmojis[i], allEmojis[randomIndex]] = [allEmojis[randomIndex], allEmojis[i]];
         }
-        cards.forEach((card, index) => {
+        //Assigning the shuffled emojis to the cards
+        cards.forEach((card,index) => {
           card.innerText = "";
           card.addEventListener("click", () => {
             if (openCount < 2 && card.innerText=="") {
@@ -129,7 +134,9 @@
               card.style.transform = "rotateY(180deg)";
               card.innerText = allEmojis[index];
               openCount++;
+
               if (openCount == 2) {
+                //if the card matches
                 if (open1.innerText == open2.innerText) {
                   open1.style.backgroundColor = "yellow";
                   open2.style.backgroundColor = "yellow";
@@ -137,6 +144,7 @@
                   open2 = null;
                   openCount = 0;
                 }
+                //if the cards won't match
                 else {
                   setTimeout(() => {
                     open1.style.transform = "rotateY(0deg)";
@@ -146,7 +154,7 @@
                     open1 = null;
                     open2 = null;
                     openCount = 0;
-                  }, 500);
+                  }, 700);
                 }
               }
             }
