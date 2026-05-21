@@ -10,23 +10,8 @@
       background-color: rgb(192, 192, 192);
     }
 
-    .cards {
-      width: 70px;
-      height: 80px;
-      background-color: rgb(88, 88, 88);
-      border: 1px solid black;
-      margin: 10px;
-      display: inline-block;
-      border-radius: 10px;
-      line-height: 80px;
-      text-align: center;
-      vertical-align: top;
-      font-size: 30px;
-      transition: transform 0.5s;
-    }
-
     .cardCollection {
-      padding: 10px;
+      padding: 15px;
     }
 
     .topics {
@@ -40,12 +25,44 @@
 
     .topics div {
       cursor: pointer;
-      padding:0px 10px;
+      padding: 0px 10px;
     }
 
     .topics div:hover {
       color: blue;
       font-weight: bold;
+    }
+
+    .card {
+      width: 70px;
+      height: 80px;
+      position: relative;
+      transition: transform 0.5s;
+      transform-style: preserve-3d;
+      cursor: pointer;
+      border-radius: 10px;
+      display: inline-block;
+      margin: 10px;
+    }
+
+    .sideview {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      backface-visibility: hidden;
+      border-radius: 10px;
+      font-size: 30px;
+      line-height: 80px;
+      text-align: center;
+    }
+
+    .frontview {
+      background-color: rgb(88, 88, 88);
+    }
+
+    .backview {
+      background-color: rgb(88, 88, 88);
+      transform: rotateY(180deg);
     }
   </style>
 </head>
@@ -60,26 +77,25 @@
   </div>
   <div id="container">
     <div class="cardCollection">
-      <div id="card1" class="cards"></div>
-      <div id="card2" class="cards"></div>
-      <div id="card3" class="cards"></div>
-      <div id="card4" class="cards"></div>
-      <div id="card5" class="cards"></div>
-      <div id="card6" class="cards"></div>
-      <div id="card7" class="cards"></div>
-      <div id="card8" class="cards"></div>
-      <div id="card9" class="cards"></div>
-      <div id="card10" class="cards"></div>
-      <div id="card11" class="cards"></div>
-      <div id="card12" class="cards"></div>
-      <div id="card13" class="cards"></div>
-      <div id="card14" class="cards"></div>
-      <div id="card15" class="cards"></div>
-      <div id="card16" class="cards"></div>
+      <div class="card">
+        <div class="frontview sideview"></div>
+        <div class="backview sideview"></div>
+      </div>
     </div>
   </div>
 
   <script>
+
+    for (let i = 0; i < 15; i++) {
+      const tile = document.createElement("div");
+      tile.classList.add("card");
+      tile.innerHTML = `
+        <div class="frontview sideview"></div>
+        <div class="backview sideview"></div>
+      `;
+      document.querySelector(".cardCollection").appendChild(tile);
+    }
+
     const topics = document.querySelectorAll(".topics div");
     const emojis = {
       foods: ["🍔", "🥤", "🥗", "🍗", "🍟", "🥓", "🥞", "🍲"],
@@ -100,20 +116,19 @@
         topic.style.borderRadius = "10px";
         selectedEmoji = emojis[topic.innerText.toLowerCase()];
         const allEmojis = [...selectedEmoji, ...selectedEmoji];
-        let cards = document.querySelectorAll(".cards");
+        let cards = document.querySelectorAll(".card");
         let openCount = 0;
         let open1 = null;
         let open2 = null;
         //keep the original styles of the cards and remove the emojis
         cards.forEach(card => {
           card.style.transform = "rotateY(0deg)";
-          card.style.backgroundColor = "rgb(88, 88, 88)";
-          card.innerText = "";
+          card.querySelector(".backview").style.backgroundColor = "rgb(88, 88, 88)";
         });
         //Restructuring the cards to remove the previous event listeners
         const container = document.querySelector(".cardCollection");
         container.innerHTML = container.innerHTML;
-        cards = document.querySelectorAll(".cards");
+        cards = document.querySelectorAll(".card");
 
         //shuffling the emojis 
         for (let i = 0; i < allEmojis.length; i++) {
@@ -121,10 +136,10 @@
           [allEmojis[i], allEmojis[randomIndex]] = [allEmojis[randomIndex], allEmojis[i]];
         }
         //Assigning the shuffled emojis to the cards
-        cards.forEach((card,index) => {
-          card.innerText = "";
+        cards.forEach((card, index) => {
+          card.querySelector(".backview").innerText = allEmojis[index];
           card.addEventListener("click", () => {
-            if (openCount < 2 && card.innerText=="") {
+            if (openCount < 2 && card.style.transform != "rotateY(180deg)") {
               if (open1 == null) {
                 open1 = card;
               }
@@ -132,32 +147,30 @@
                 open2 = card;
               }
               card.style.transform = "rotateY(180deg)";
-              card.innerText = allEmojis[index];
               openCount++;
-
-              if (openCount == 2) {
-                //if the card matches
-                if (open1.innerText == open2.innerText) {
-                  open1.style.backgroundColor = "yellow";
-                  open2.style.backgroundColor = "yellow";
+            }
+            if (openCount == 2) {
+              if (open1.querySelector(".backview").innerText == open2.querySelector(".backview").innerText) {
+                setTimeout(() => {
+                  open1.querySelector(".backview").style.backgroundColor = "yellow";
+                  open2.querySelector(".backview").style.backgroundColor = "yellow";
                   open1 = null;
                   open2 = null;
                   openCount = 0;
-                }
-                //if the cards won't match
-                else {
-                  setTimeout(() => {
-                    open1.style.transform = "rotateY(0deg)";
-                    open2.style.transform = "rotateY(0deg)";
-                    open1.innerText = "";
-                    open2.innerText = "";
-                    open1 = null;
-                    open2 = null;
-                    openCount = 0;
-                  }, 700);
-                }
+                }, 300)
+
+              }
+              else {
+                setTimeout(() => {
+                  open1.style.transform = "rotateY(0deg)";
+                  open2.style.transform = "rotateY(0deg)";
+                  open1 = null;
+                  open2 = null;
+                  openCount = 0;
+                }, 600)
               }
             }
+
           })
         })
 
