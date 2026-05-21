@@ -1,0 +1,55 @@
+<html>
+
+<body>
+  <p id="currentLocation"></p>
+  <p id="location"></p>
+  <script type="module">
+    function calculateDistance(lat1, long1, lat2, long2) {
+      const R = 6371; // Radius of the Earth in kilometers
+      //getting the values in radians
+      const rLat1 = (lat1) * Math.PI / 180;
+      const rLat2 = (lat2) * Math.PI / 180;
+      const rLong1 = (long1) * Math.PI / 180;
+      const rLong2 = (long2) * Math.PI / 180;
+      //longitude difference
+      const dLong = (rLong2 - rLong1) * Math.cos((rLat1 + rLat2) / 2);
+      //latitude difference
+      const dLat = rLat2 - rLat1;
+      //calculating the distance in km
+      const distance = Math.sqrt(dLat * dLat + dLong * dLong) * R;
+      return distance;
+    }
+
+    const data = await fetch("data/sl-map.json").then(response => response.json());
+    console.log(data);
+    const location = document.querySelector("#location");
+    //getting the current location of the user
+    navigator.geolocation.getCurrentPosition((position) => {
+      const CurrentLat = position.coords.latitude;
+      const CurrentLong = position.coords.longitude;
+      document.querySelector("#currentLocation").innerText = `Your current location is latitude: ${CurrentLat.toFixed(4)}, longitude: ${CurrentLong.toFixed(4)}`;
+      
+      let shortest = Infinity;
+      let shortestPlace = null;
+
+      for (const district in data) {
+        for (const place in data[district]) {
+          const details = data[district][place];
+          const lat = parseFloat(details.latitude);
+          const long = parseFloat(details.longitude);
+          const distance = calculateDistance(CurrentLat, CurrentLong, lat, long);
+          if (distance < shortest) {
+            shortest = distance;
+            shortestPlace = place;
+          }
+        }
+      }
+      location.innerHTML = `You are closest to ${shortestPlace}`;
+    },
+      (error) => {
+        location.innerText = `Error: ${error.message}`;
+      })
+  </script>
+</body>
+
+</html>
