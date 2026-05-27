@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    .graph {
+      background-color: white;
+      border: 1px solid #ccc;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      display: block;
+      margin-bottom: 20px;
+      width: 500px;
+      height: 500px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <svg viewBox="0 0 1050 1050" class="graph"></svg>
+
+  <fieldset>
+    <legend>Change the dimensions</legend>
+    <label for="xCordinates">X Coordinates</label>
+    <input type="text" id="xCordinates" name="xCordinates" value="12,18,25,33,41,50">
+    <br>
+    <label for="yCordinates">Y Coordinates</label>
+    <input type="text" id="yCordinates" name="yCordinates" value="10,15,20,25,30,35">
+  </fieldset>
+
+  <script>
+    const svgElement = document.querySelector("svg")
+    const xPointsInput = document.querySelector("#xCordinates")
+    const yPointsInput = document.querySelector("#yCordinates")
+    const points = document.querySelector("fieldset")
+    
+    const totalSize = 1050;
+    const padding = 100; 
+    const chartWidth = totalSize - (padding * 2); 
+    const chartHeight = totalSize - (padding * 2);
+
+    function drawChart() { 
+      const xArray = xPointsInput.value.split(",").map(x => parseFloat(x));
+      const yArray = yPointsInput.value.split(",").map(y => parseFloat(y));
+      
+      if (xArray.length < 2 || xArray.length !== yArray.length) { return; }
+      
+      svgElement.innerHTML = "";
+
+      const lowXBound = Math.floor(Math.min(...xArray) / 10) * 10;
+      const highXBound = Math.ceil(Math.max(...xArray) / 10) * 10;
+      const lowYBound = Math.floor(Math.min(...yArray) / 10) * 10;
+      const highYBound = Math.ceil(Math.max(...yArray) / 10) * 10;
+      
+      const xScale = chartWidth / (highXBound - lowXBound);
+      const yScale = chartHeight / (highYBound - lowYBound);
+
+      for (let x = lowXBound; x <= highXBound; x += 10) {
+        const xPos = padding + (x - lowXBound) * xScale;
+        
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", xPos);
+        line.setAttribute("y1", padding);
+        line.setAttribute("x2", xPos);
+        line.setAttribute("y2", padding + chartHeight);
+        line.setAttribute("stroke", "#e2e8f0");
+        line.setAttribute("stroke-width", "2");
+        svgElement.append(line);
+
+        const axisText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        axisText.setAttribute("x", xPos);
+        axisText.setAttribute("y", padding + chartHeight + 40);
+
+        axisText.textContent = x;
+        svgElement.append(axisText);
+      }
+
+      for (let y = lowYBound; y <= highYBound; y += 10) {
+        const yPos = padding + chartHeight - (y - lowYBound) * yScale;
+        
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", padding);
+        line.setAttribute("y1", yPos);
+        line.setAttribute("x2", padding + chartWidth);
+        line.setAttribute("y2", yPos);
+        line.setAttribute("stroke", "#e2e8f0");
+        line.setAttribute("stroke-width", "2");
+        svgElement.append(line);
+
+        const axisText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        axisText.setAttribute("x", padding - 25);
+        axisText.setAttribute("y", yPos + 6);
+        axisText.textContent = y;
+        svgElement.append(axisText);
+      }
+
+      const data = [];
+      for (let i = 0; i < xArray.length; i++) {
+        const xPoint = xArray[i] || 0;
+        const yPoint = yArray[i] || 0;
+        const x = padding + (xPoint - lowXBound) * xScale;
+        const y = padding + chartHeight - (yPoint - lowYBound) * yScale;
+        data.push({ x, y, label: `(${xPoint}, ${yPoint})` });
+      }
+
+      const polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+      polyline.setAttribute("points", data.map(item => `${item.x},${item.y}`).join(" "));
+      polyline.setAttribute("fill", "none");
+      polyline.setAttribute("stroke", "red");
+      polyline.setAttribute("stroke-width", "4");
+      svgElement.append(polyline);
+
+      for (let i = 0; i < data.length; i++) {
+        const item = data[i];
+        
+        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttribute("cx", item.x);
+        circle.setAttribute("cy", item.y);
+        circle.setAttribute("r", "7"); 
+        circle.setAttribute("fill", "blue");
+        svgElement.append(circle);
+
+        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("x", item.x + 14);
+        text.setAttribute("y", item.y + 5);
+        text.textContent = item.label;
+        svgElement.append(text);
+      }
+    }
+
+    window.addEventListener("load", drawChart);
+    points.addEventListener("input", drawChart);
+  </script>
+</body>
+
+</html>
