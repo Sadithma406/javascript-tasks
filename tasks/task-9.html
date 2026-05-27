@@ -56,7 +56,6 @@
 
         .controls {
             margin: 20px;
-            display: flex;
             align-items: center;
             gap: 15px;
             color: white;
@@ -66,11 +65,7 @@
 
 <body>
     <div class="controls">
-        <input type="radio" name="mode" id="start" onclick="startRec()">
-        <label for="start">Start Recording</label>
-        <input type="radio" name="mode" id="stop" onclick="stopRec()">
-        <label for="stop">Stop Recording</label>
-
+        
         <input type="color" id="colorPicker">
 
         <label for="brushSize">Brush Size:</label>
@@ -79,6 +74,12 @@
 
         <button id="clear">Clear</button>
         <button id="erase">Erase</button>
+        <br><br>
+        <input type="radio" name="mode" id="start" onclick="startRec()">
+        <label for="start">Start Recording</label>
+        <input type="radio" name="mode" id="stop" onclick="stopRec()">
+        <label for="stop">Stop Recording</label>
+
     </div>
 
     <div class="canvas-container" id="container">
