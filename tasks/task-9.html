@@ -66,6 +66,11 @@
 
 <body>
     <div class="controls">
+        <input type="radio" name="mode" id="start" onclick="startRec()">
+        <label for="start">Start Recording</label>
+        <input type="radio" name="mode" id="stop" onclick="stopRec()">
+        <label for="stop">Stop Recording</label>
+
         <input type="color" id="colorPicker">
 
         <label for="brushSize">Brush Size:</label>
@@ -90,6 +95,8 @@
         const clearButton = document.querySelector("#clear");
         const canvas = document.querySelector("#canvas");
         const container = document.querySelector("#container");
+        const start = document.querySelector("#start");
+        const stop = document.querySelector("#stop");
         const eraser = document.querySelector("#erase");
         const ctx = canvas.getContext("2d");
 
@@ -101,6 +108,29 @@
         let isErasing = false;
         let lastX = 0; let lastY = 0;
         
+        const chunks = [];
+        const recorder = new MediaRecorder(canvas.captureStream(30), {mimeType: "video/webm"});
+        recorder.ondataavailable =(event) =>{
+            if(event.data.size>0){
+                chunks.push(event.data);
+            }
+        }
+        recorder.onstop = () =>{
+            const blob = new Blob(chunks, {type: "video/webm"});
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "recording.webm";
+            link.click();
+        }
+
+        function startRec(){
+            chunks.length = 0;
+            recorder.start();
+        }
+        function stopRec(){
+            recorder.stop();
+        }
 
         function applyBrushSettings() {
             ctx.lineJoin = "round";
