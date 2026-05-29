@@ -39,7 +39,7 @@
       box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
     }
 
-    .mainBox-title {
+    .title {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -47,7 +47,7 @@
       background-color: var(--title-backgroundColor);
     }
 
-    .mainBox-title h4 {
+    .title h4 {
       margin: 0;
       font-size: 22px;
       font-weight: normal;
@@ -78,7 +78,7 @@
       height: 18px;
     }
 
-    .mainBox-leftRight {
+    .leftRight {
       display: flex;
       gap: 16px;
     }
@@ -140,7 +140,7 @@
       padding-top: 10px;
     }
 
-    .mainBox-bar {
+    .bar {
       flex: 1;
       max-width: 24px;
       height: 100px; 
@@ -188,12 +188,12 @@
 <body>
 
   <div class="mainBox" data-theme="dark">
-    <div class="mainBox-title">
-      <h4 class="mainBox-topic">Dark mode</h4>
+    <div class="title">
+      <h4 class="topic">Dark mode</h4>
       <input type="checkbox" class="toggle-switch">
     </div>
     
-    <div class="mainBox-container">
+    <div class="container">
       <div class="content">
         
         <div class="searchbox">
@@ -201,7 +201,7 @@
           <img src="./images/searchWhite.png" class="searchIcon">
         </div>
         
-        <div class="mainBox-leftRight">
+        <div class="leftRight">
           <div class="leftBox">
             <div class="dot-row">
               <div class="pill-dot"></div>
@@ -224,15 +224,15 @@
         </div>
         
         <div class="graph">
-          <div class="mainBox-bar" style="--h: 12%;"></div>
-          <div class="mainBox-bar" style="--h: 18%;"></div>
-          <div class="mainBox-bar" style="--h: 32%;"></div>
-          <div class="mainBox-bar" style="--h: 55%;"></div>
-          <div class="mainBox-bar" style="--h: 75%;"></div>
-          <div class="mainBox-bar" style="--h: 88%;"></div>
-          <div class="mainBox-bar" style="--h: 80%;"></div>
-          <div class="mainBox-bar" style="--h: 50%;"></div>
-          <div class="mainBox-bar" style="--h: 35%;"></div>
+          <div class="bar" style="--h: 12%;"></div>
+          <div class="bar" style="--h: 18%;"></div>
+          <div class="bar" style="--h: 32%;"></div>
+          <div class="bar" style="--h: 55%;"></div>
+          <div class="bar" style="--h: 75%;"></div>
+          <div class="bar" style="--h: 88%;"></div>
+          <div class="bar" style="--h: 80%;"></div>
+          <div class="bar" style="--h: 50%;"></div>
+          <div class="bar" style="--h: 35%;"></div>
         </div>
         
       </div>
@@ -243,15 +243,18 @@
 <script>
   const toggleSwitch = document.querySelector('.toggle-switch');
   const mainBox = document.querySelector('.mainBox');
-  const topicTex = document.querySelector(".mainBox-topic");
+  const topicTex = document.querySelector(".topic");
+  const icon = document.querySelector(".searchIcon");
 
   toggleSwitch.addEventListener('change', () => {
     if (toggleSwitch.checked) {
       mainBox.setAttribute('data-theme', 'light');
       topicTex.innerText = "light mode";
+      icon.src="./images/searchBlack.png";
     } else {
       mainBox.setAttribute('data-theme', 'dark');
       topicTex.innerText = "dark mode";
+      icon.src="./images/searchWhite.png";
     }
   });
 </script>
