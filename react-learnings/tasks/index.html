@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>React Learning Tasks</title>
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="React Learning Tasks">
+  <meta property="og:description"
+    content="A collection of React tasks built with Vite to learn modern React concepts and patterns.">
+  <meta property="og:url" content="https://sadithma406.github.io/javascript-tasks/react-learnings/tasks/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+      min-height: 100vh;
+      color: #e0e0e0;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 24px;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(97, 218, 251, 0.1);
+      border: 1px solid rgba(97, 218, 251, 0.25);
+      border-radius: 999px;
+      padding: 6px 16px;
+      font-size: 0.8rem;
+      color: #61dafb;
+      letter-spacing: 0.5px;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .badge svg {
+      width: 16px;
+      height: 16px;
+      fill: #61dafb;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #61dafb, #a78bfa, #f472b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      font-size: 1.05rem;
+      color: #9ca3af;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #9ca3af;
+      text-decoration: none;
+      font-size: 0.9rem;
+      margin-bottom: 32px;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: #61dafb;
+    }
+
+    .back-link svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    .task-grid {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .task-grid li {
+      position: relative;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+
+    .task-grid li::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(97, 218, 251, 0.08), rgba(167, 139, 250, 0.08));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .task-grid li:hover {
+      border-color: rgba(97, 218, 251, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(97, 218, 251, 0.1);
+    }
+
+    .task-grid li:hover::before {
+      opacity: 1;
+    }
+
+    .task-grid a {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 24px;
+      color: #e0e0e0;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 500;
+      z-index: 1;
+      transition: color 0.2s;
+    }
+
+    .task-grid li:hover a {
+      color: #ffffff;
+    }
+
+    .task-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #61dafb22, #a78bfa22);
+      border: 1px solid rgba(97, 218, 251, 0.15);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #61dafb;
+      flex-shrink: 0;
+    }
+
+    .task-info {
+      text-align: left;
+    }
+
+    .task-title {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .task-desc {
+      font-size: 0.8rem;
+      color: #6b7280;
+      font-weight: 400;
+    }
+
+    .arrow {
+      margin-left: auto;
+      opacity: 0;
+      transform: translateX(-8px);
+      transition: all 0.3s ease;
+      color: #61dafb;
+      font-size: 1.2rem;
+    }
+
+    .task-grid li:hover .arrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .empty-state {
+      padding: 48px 24px;
+      text-align: center;
+      color: #6b7280;
+      font-style: italic;
+    }
+
+    .divider {
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, #61dafb, #a78bfa);
+      border-radius: 99px;
+      margin: 0 auto 32px;
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      .container {
+        padding: 32px 16px;
+      }
+
+      .task-grid a {
+        padding: 14px 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <a href="../../" class="back-link">
+      <svg viewBox="0 0 24 24">
+        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+      </svg>
+      Back to JavaScript Tasks
+    </a>
+
+    <div class="badge">
+      <svg viewBox="0 0 24 24">
+        <path
+          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
+      </svg>
+      React + Vite
+    </div>
+
+    <h1>React Learning Tasks</h1>
+    <p class="subtitle">
+      Hands-on React tasks built with Vite — exploring components, state, hooks, and modern React patterns.
+    </p>
+    <div class="divider"></div>
+
+    <ul class="task-grid" id="task-list">
+      <!-- Add React tasks here as you build them. Example:
+      <li>
+        <a href="task-13/">
+          <span class="task-number">13</span>
+          <div class="task-info">
+            <div class="task-title">Task Title Here</div>
+            <div class="task-desc">Brief description of the task</div>
+          </div>
+          <span class="arrow">→</span>
+        </a>
+      </li>
+      -->
+    </ul>
+
+    <div class="empty-state" id="empty-state">
+      🚀 React tasks coming soon! Start building Task 13 and beyond.
+    </div>
+  </div>
+
+  <script>
+    // Auto-hide empty state if there are task items
+    const taskList = document.getElementById('task-list');
+    const emptyState = document.getElementById('empty-state');
+    if (taskList && taskList.querySelectorAll('li').length > 0) {
+      emptyState.style.display = 'none';
+    }
+  </script>
+</body>
+
+</html>
